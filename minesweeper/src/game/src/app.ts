@@ -18,15 +18,15 @@ interface LevelCategory {
 const CATEGORIES: Omit<LevelCategory, 'levels'>[] = [
   {
     id: 'hex', label: '六边形', icon: '⬡',
-    files: Array.from({ length: 10 }, (_, i) => `/levels/hex-${String(i + 1).padStart(2, '0')}.mswp`),
+    files: Array.from({ length: 10 }, (_, i) => `${import.meta.env.BASE_URL}levels/hex-${String(i + 1).padStart(2, '0')}.mswp`),
   },
   {
     id: 'torus', label: '环面', icon: '🔁',
-    files: Array.from({ length: 10 }, (_, i) => `/levels/torus-${String(i + 1).padStart(2, '0')}.mswp`),
+    files: Array.from({ length: 10 }, (_, i) => `${import.meta.env.BASE_URL}levels/torus-${String(i + 1).padStart(2, '0')}.mswp`),
   },
   {
     id: 'tri', label: '三角形', icon: '△',
-    files: Array.from({ length: 10 }, (_, i) => `/levels/tri-${String(i + 1).padStart(2, '0')}.mswp`),
+    files: Array.from({ length: 10 }, (_, i) => `${import.meta.env.BASE_URL}levels/tri-${String(i + 1).padStart(2, '0')}.mswp`),
   },
 ];
 
