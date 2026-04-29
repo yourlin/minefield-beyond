@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/verifier",
+    "rootDir": "../..",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": true,
+    "paths": {
+      "@core/*": ["src/core/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "../core/**/*.ts"],
+  "exclude": ["../**/*.test.ts"]
+}

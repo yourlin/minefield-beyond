@@ -1,0 +1,78 @@
+installation:
+  version: 6.5.0
+  installDate: 2026-04-27T06:12:25.968Z
+  lastUpdated: 2026-04-27T06:12:25.968Z
+modules:
+  - name: core
+    version: 6.5.0
+    installDate: 2026-04-27T06:12:04.463Z
+    lastUpdated: 2026-04-27T06:12:25.263Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: bmm
+    version: 6.5.0
+    installDate: 2026-04-27T06:12:04.434Z
+    lastUpdated: 2026-04-27T06:12:25.264Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: bmb
+    version: v1.7.0
+    installDate: 2026-04-27T06:12:04.699Z
+    lastUpdated: 2026-04-27T06:12:25.352Z
+    source: external
+    npmPackage: bmad-builder
+    repoUrl: https://github.com/bmad-code-org/bmad-builder
+    channel: stable
+    sha: 86033fc9aeae2ca6d52c7cdb675c1f4bf17fc1c1
+  - name: cis
+    version: v0.2.0
+    installDate: 2026-04-27T06:12:04.815Z
+    lastUpdated: 2026-04-27T06:12:25.439Z
+    source: external
+    npmPackage: bmad-creative-intelligence-suite
+    repoUrl: https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite
+    channel: stable
+    sha: 14a63b893c07173b7a6cfe0fb6a9a72ba51d3cf1
+  - name: gds
+    version: v0.4.0
+    installDate: 2026-04-27T06:12:05.210Z
+    lastUpdated: 2026-04-27T06:12:25.534Z
+    source: external
+    npmPackage: bmad-game-dev-studio
+    repoUrl: https://github.com/bmad-code-org/bmad-module-game-dev-studio
+    channel: stable
+    sha: 07ef779abaafb21fe3a8d80d57cf0b4dc9801d60
+  - name: tea
+    version: v1.15.1
+    installDate: 2026-04-27T06:12:06.838Z
+    lastUpdated: 2026-04-27T06:12:25.623Z
+    source: external
+    npmPackage: bmad-method-test-architecture-enterprise
+    repoUrl: https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise
+    channel: stable
+    sha: 7c94bdc6e3d2c8c3cad09eb0a32a42fade0e9079
+  - name: suno
+    version: v1.6.7
+    installDate: 2026-04-27T06:12:11.187Z
+    lastUpdated: 2026-04-27T06:12:25.796Z
+    source: community
+    npmPackage: null
+    repoUrl: https://github.com/zarlor/suno-band-manager
+    channel: stable
+    sha: c9bcc02c18f6f25eaa493a1b9170a6aabd993d67
+    registryApprovedTag: v1.6.7
+    registryApprovedSha: c9bcc02c18f6f25eaa493a1b9170a6aabd993d67
+  - name: wds
+    version: v0.1.0
+    installDate: 2026-04-27T06:12:17.418Z
+    lastUpdated: 2026-04-27T06:12:25.968Z
+    source: community
+    npmPackage: bmad-method-wds-expansion
+    repoUrl: https://github.com/bmad-code-org/bmad-method-wds-expansion
+    channel: stable
+    sha: 0c9ebf3769e1a20797893376318b595bfa64626b
+    registryApprovedTag: v0.1.0
+ides:
+  - kiro

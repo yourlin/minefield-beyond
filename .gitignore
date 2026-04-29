@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+*.swo
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+
+# BMAD user config (personal preferences)
+*.user.toml
+
+# Kiro local settings
+.kiro/settings/

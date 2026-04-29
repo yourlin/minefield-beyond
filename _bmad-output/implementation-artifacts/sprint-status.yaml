@@ -1,0 +1,110 @@
+# generated: 2026-04-28
+# last_updated: 2026-04-28
+# project: demo
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-04-28
+last_updated: 2026-04-29
+project: demo
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+
+  # ── Epic 1: 项目基础设施与核心拓扑引擎 ──
+  epic-1: done
+  1-1-project-init-and-directory-structure: done
+  1-2-core-type-definitions-and-error-handling: done
+  1-3-topology-abstraction-and-hex-implementation: done
+  epic-1-retrospective: optional
+
+  # ── Epic 2: 关卡数据管线与可解性验证 ──
+  epic-2: done
+  2-1-mechanism-type-definitions-and-rule-engine: done
+  2-2-binary-level-format-and-codec-abstraction: done
+  2-3-constraint-solver-implementation: done
+  2-4-solvability-verifier-cli: done
+  2-5-level-reader-web-app: done
+  2-6-create-dev-verification-level-set: done
+  epic-2-retrospective: optional
+
+  # ── Epic 3: 核心游戏循环（六边形单关可玩） ──
+  epic-3: done
+  3-1-project-init-and-board-rendering: done
+  3-2-game-state-machine-and-cell-reveal: done
+  3-3-auto-expand-and-flag-operations: done
+  3-4-mine-hit-failure-and-win-detection: done
+  epic-3-retrospective: optional
+
+  # ── Epic 4: 关卡流程与进度管理 ──
+  epic-4: done
+  4-1-storage-abstraction-and-progress-persistence: done
+  4-2-level-select-screen: done
+  4-3-level-unlock-retry-and-timer: done
+  4-4-level-resource-loading-and-interrupt-recovery: done
+  epic-4-retrospective: optional
+
+  # ── Epic 5: 信息机制与多拓扑扩展 ──
+  epic-5: done
+  5-1-triangle-and-torus-topology-implementation: done
+  5-2-irregular-and-mixed-topology-implementation: done
+  5-3-fuzzy-hint-mechanism-and-pencil-marks: done
+  5-4-delayed-reveal-mechanism-and-topology-theme-colors: done
+  epic-5-retrospective: optional
+
+  # ── Epic 6: 教学引导与失败反馈系统 ──
+  epic-6: done
+  6-1-interactive-tutorial-guidance-system: done
+  6-2-rule-card: done
+  6-3-mine-hit-feedback-and-death-review: done
+  6-4-consecutive-failure-emotional-buffer: done
+  epic-6-retrospective: optional
+
+  # ── Epic 7: 视觉打磨、音效与通关体验 ──
+  epic-7: done
+  7-1-pause-system-and-auto-pause: done
+  7-2-hover-feedback-and-board-expand-animation: done
+  7-3-audio-system: done
+  7-4-completion-celebration-and-achievement-review: done
+  7-5-accessibility-visual-compliance: done
+  epic-7-retrospective: optional
+
+  # ── Epic 8: 移动端适配与部署发布 ──
+  epic-8: done
+  8-1-mobile-touch-interaction-adaptation: done
+  8-2-mobile-toolbar: done
+  8-3-desktop-keyboard-navigation: done
+  8-4-static-deployment-and-landing-page: done
+  epic-8-retrospective: optional

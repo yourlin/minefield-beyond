@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高挑战性扫雷游戏 - UX 设计方向探索</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-300:#5EEAD4;
+--teal-400:#2DD4BF;--teal-500:#14B8A6;--teal-600:#0D9488;--teal-700:#0F766E;
+--slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+--slate-500:#64748B;--slate-800:#1E293B;
+--red-100:#FEE2E2;--red-300:#FCA5A5;--red-500:#EF4444;
+--amber-100:#FEF3C7;--amber-300:#FCD34D;--amber-500:#F59E0B;
+--violet-100:#EDE9FE;--violet-300:#C4B5FD;--violet-500:#8B5CF6;
+--emerald-500:#10B981;--blue-100:#DBEAFE;--blue-300:#93C5FD;
+--orange-500:#F97316;--green-500:#22C55E;
+}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--slate-50);color:var(--slate-800);line-height:1.6}
+.num{font-family:'Nunito',sans-serif}
+nav{position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:1px solid var(--slate-200);z-index:100;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+nav h1{font-size:18px;font-weight:700;color:var(--teal-700)}
+nav button{padding:8px 16px;border:2px solid var(--slate-200);border-radius:12px;background:#fff;cursor:pointer;font-family:'Noto Sans SC',sans-serif;font-size:14px;transition:all .2s}
+nav button:hover{border-color:var(--teal-400);color:var(--teal-700)}
+nav button.active{border-color:var(--teal-600);background:var(--teal-50);color:var(--teal-700);font-weight:600}
+.container{max-width:1200px;margin:80px auto 40px;padding:0 24px}
+.direction{display:none}
+.direction.active{display:block}
+.direction-title{font-size:24px;font-weight:700;margin-bottom:8px;color:var(--teal-700)}
+.direction-desc{font-size:16px;color:var(--slate-500);margin-bottom:32px}
+.mockup-frame{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:32px}
+.mockup-label{padding:12px 20px;background:var(--slate-100);font-size:14px;font-weight:600;color:var(--slate-500);border-bottom:1px solid var(--slate-200)}
+
+/* Direction A: Game Board - Clean Minimal */
+.board-a{padding:32px;display:flex;flex-direction:column;align-items:center;gap:24px;background:var(--slate-50)}
+.board-a .top-bar{display:flex;justify-content:space-between;width:100%;max-width:500px;align-items:center}
+.board-a .level-tag{background:var(--teal-600);color:#fff;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+.board-a .timer{font-family:'Nunito',sans-serif;font-size:18px;font-weight:600;color:var(--slate-500)}
+.board-a .icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--slate-200);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s}
+.board-a .icon-btn:hover{background:var(--teal-100)}
+.hex-grid{display:flex;flex-direction:column;align-items:center;gap:4px}
+.hex-row{display:flex;gap:4px}
+.hex-cell{width:52px;height:46px;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:18px;cursor:pointer;transition:all .15s;position:relative}
+.hex-cell.unrevealed{background:var(--slate-200);box-shadow:inset 0 -2px 0 var(--slate-300)}
+.hex-cell.unrevealed:hover{background:var(--teal-100);transform:scale(1.05)}
+.hex-cell.revealed{background:var(--teal-50);color:var(--teal-700)}
+.hex-cell.revealed-0{background:var(--teal-50);color:transparent}
+.hex-cell.flagged{background:var(--red-100);color:var(--red-500);font-size:16px}
+.hex-cell.pencil-mine{background:var(--amber-100);color:var(--amber-500);font-size:14px}
+.hex-cell.pencil-safe{background:var(--blue-100);color:var(--blue-300);font-size:20px}
+.hex-cell.delayed{background:var(--violet-100);color:var(--violet-500);font-size:14px}
+.hex-cell.fuzzy{background:var(--teal-50);color:var(--amber-500);font-size:13px;font-weight:600}
+.hex-cell.mine{background:var(--red-100);color:var(--red-500);font-size:18px;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.board-a .bottom-bar{display:flex;gap:12px;align-items:center}
+.board-a .action-btn{padding:8px 20px;border-radius:12px;border:none;font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s}
+.board-a .action-btn.primary{background:var(--teal-600);color:#fff}
+.board-a .action-btn.primary:hover{background:var(--teal-700)}
+.board-a .action-btn.secondary{background:var(--slate-200);color:var(--slate-800)}
+.board-a .mine-count{font-family:'Nunito',sans-serif;font-size:16px;font-weight:600;color:var(--red-500)}
+
+/* Direction B: Level Select */
+.level-select-b{padding:32px;background:var(--slate-50)}
+.level-select-b h2{text-align:center;font-size:24px;margin-bottom:8px;color:var(--teal-700)}
+.level-select-b .subtitle{text-align:center;color:var(--slate-500);margin-bottom:32px;font-size:15px}
+.level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:600px;margin:0 auto}
+.level-card{background:#fff;border-radius:16px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative;overflow:hidden}
+.level-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(13,148,136,.15)}
+.level-card.completed{border-color:var(--emerald-500)}
+.level-card.current{border-color:var(--teal-600);box-shadow:0 0 12px rgba(13,148,136,.2)}
+.level-card.locked{opacity:.5;cursor:default}
+.level-card.locked:hover{transform:none;box-shadow:none}
+.level-card .level-num{font-family:'Nunito',sans-serif;font-size:28px;font-weight:700;color:var(--teal-700)}
+.level-card.locked .level-num{color:var(--slate-300)}
+.level-card .topo-icon{font-size:24px;margin:8px 0}
+.level-card .level-name{font-size:12px;color:var(--slate-500)}
+.level-card .best-time{font-family:'Nunito',sans-serif;font-size:11px;color:var(--emerald-500);margin-top:4px}
+.level-card .star{position:absolute;top:8px;right:8px;font-size:14px}
+.progress-bar{max-width:600px;margin:24px auto 0;height:6px;background:var(--slate-200);border-radius:3px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--teal-400),var(--teal-600));border-radius:3px;transition:width .5s}
+
+/* Direction C: Death Review */
+.death-review-c{padding:32px;background:var(--slate-50)}
+.death-review-c .header{text-align:center;margin-bottom:24px}
+.death-review-c .header h2{font-size:20px;color:var(--red-500);margin-bottom:4px}
+.death-review-c .header p{color:var(--slate-500);font-size:14px}
+.review-board{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:24px}
+.review-steps{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.review-step{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:2px solid var(--slate-200);background:#fff}
+.review-step.active{border-color:var(--teal-600);background:var(--teal-50);color:var(--teal-700)}
+.review-step:hover{border-color:var(--teal-300)}
+.review-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--slate-500)}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.review-actions{display:flex;gap:12px;justify-content:center}
+
+/* Direction D: Tutorial Overlay */
+.tutorial-d{padding:32px;background:var(--slate-50);position:relative}
+.tutorial-overlay{position:absolute;inset:0;background:rgba(30,41,59,.6);display:flex;align-items:center;justify-content:center;border-radius:0 0 16px 16px}
+.tutorial-card{background:#fff;border-radius:16px;padding:24px;max-width:320px;text-align:center;box-shadow:0 10px 15px rgba(0,0,0,.1)}
+.tutorial-card .emoji{font-size:48px;margin-bottom:12px}
+.tutorial-card h3{font-size:18px;margin-bottom:8px;color:var(--teal-700)}
+.tutorial-card p{font-size:14px;color:var(--slate-500);margin-bottom:16px;line-height:1.6}
+.tutorial-card .hint-arrow{font-size:32px;color:var(--teal-400);animation:bounce 1s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.tutorial-card .skip-btn{font-size:12px;color:var(--slate-500);cursor:pointer;text-decoration:underline}
+
+/* Direction E: Rule Card */
+.rule-card-e{padding:32px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;background:var(--slate-50)}
+.rule-card{background:#fff;border-radius:16px;padding:24px;width:280px;box-shadow:0 4px 6px rgba(0,0,0,.07)}
+.rule-card .rule-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.rule-card .rule-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.rule-card .rule-title{font-size:16px;font-weight:600}
+.rule-card .rule-desc{font-size:14px;color:var(--slate-500);line-height:1.6;margin-bottom:16px}
+.rule-card .rule-example{background:var(--slate-50);border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.mini-cell{width:36px;height:32px;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:14px}
+
+/* Direction F: Completion */
+.completion-f{padding:48px 32px;text-align:center;background:linear-gradient(180deg,var(--teal-50),#fff)}
+.completion-f .trophy{font-size:64px;margin-bottom:16px}
+.completion-f h2{font-size:24px;color:var(--teal-700);margin-bottom:8px}
+.completion-f .subtitle{color:var(--slate-500);margin-bottom:32px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:400px;margin:0 auto 32px}
+.stat-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.stat-card .stat-value{font-family:'Nunito',sans-serif;font-size:28px;font-weight:700;color:var(--teal-600)}
+.stat-card .stat-label{font-size:12px;color:var(--slate-500);margin-top:4px}
+.next-level-preview{background:#fff;border-radius:16px;padding:24px;max-width:300px;margin:0 auto;box-shadow:0 4px 6px rgba(0,0,0,.07);cursor:pointer;transition:all .2s}
+.next-level-preview:hover{transform:translateY(-2px);box-shadow:0 0 16px rgba(13,148,136,.2)}
+.next-level-preview .next-label{font-size:12px;color:var(--slate-500);margin-bottom:8px}
+.next-level-preview .next-topo{font-size:40px;margin-bottom:8px}
+.next-level-preview .next-name{font-size:16px;font-weight:600;color:var(--teal-700)}
+
+/* Direction G: Mobile Layout */
+.mobile-g{max-width:375px;margin:0 auto;background:var(--slate-50);border-radius:16px;overflow:hidden;border:2px solid var(--slate-200)}
+.mobile-g .mobile-header{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid var(--slate-200)}
+.mobile-g .mobile-board{padding:16px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.mobile-g .mobile-toolbar{padding:12px 16px;display:flex;justify-content:center;gap:12px;background:#fff;border-top:1px solid var(--slate-200)}
+.mobile-g .tool-btn{width:44px;height:44px;border-radius:12px;border:2px solid var(--slate-200);background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .2s}
+.mobile-g .tool-btn.active{border-color:var(--teal-600);background:var(--teal-50)}
+.mobile-g .tool-btn:hover{border-color:var(--teal-300)}
+.hex-cell-sm{width:40px;height:36px;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s}
+
+/* Comparison */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:768px){.compare-row{grid-template-columns:1fr}.level-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<nav>
+<h1>🎯 设计方向探索</h1>
+<button class="active" onclick="show('a')">A. 游戏棋盘</button>
+<button onclick="show('b')">B. 关卡选择</button>
+<button onclick="show('c')">C. 死因回顾</button>
+<button onclick="show('d')">D. 教学引导</button>
+<button onclick="show('e')">E. 规则卡片</button>
+<button onclick="show('f')">F. 通关庆祝</button>
+<button onclick="show('g')">G. 移动端</button>
+<button onclick="show('h')">H. 全景对比</button>
+</nav>
+<div class="container">
+<!-- Direction A: Game Board -->
+<div class="direction active" id="dir-a">
+<h2 class="direction-title">A. 游戏棋盘 — 极简专注</h2>
+<p class="direction-desc">棋盘居中，UI 控件退居边缘。视觉焦点 100% 在推理上。</p>
+<div class="mockup-frame">
+<div class="mockup-label">六边形拓扑 · 第 1 关 · 游戏进行中</div>
+<div class="board-a">
+<div class="top-bar">
+<span class="level-tag">第 1 关 · 六边形</span>
+<span class="timer num">01:23</span>
+<div style="display:flex;gap:8px">
+<button class="icon-btn" title="规则卡片">📖</button>
+<button class="icon-btn" title="暂停">⏸</button>
+</div>
+</div>
+<div class="hex-grid">
+<div class="hex-row">
+<div class="hex-cell revealed num">2</div>
+<div class="hex-cell revealed num">1</div>
+<div class="hex-cell revealed-0"></div>
+<div class="hex-cell unrevealed"></div>
+</div>
+<div class="hex-row" style="margin-left:28px">
+<div class="hex-cell revealed num">3</div>
+<div class="hex-cell flagged">🚩</div>
+<div class="hex-cell revealed num">1</div>
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell unrevealed"></div>
+</div>
+<div class="hex-row">
+<div class="hex-cell pencil-mine">❓</div>
+<div class="hex-cell revealed num">2</div>
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell unrevealed"></div>
+</div>
+<div class="hex-row" style="margin-left:28px">
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell pencil-safe">●</div>
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell fuzzy num">1-3</div>
+<div class="hex-cell unrevealed"></div>
+</div>
+<div class="hex-row">
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell delayed">⏳2</div>
+<div class="hex-cell unrevealed"></div>
+<div class="hex-cell unrevealed"></div>
+</div>
+</div>
+<div class="bottom-bar">
+<span class="mine-count num">💣 ×4</span>
+<button class="action-btn secondary">↩ 撤销标记</button>
+<button class="action-btn secondary">✏️ 假设模式</button>
+</div>
+</div>
+</div>
+<div class="mockup-frame">
+<div class="mockup-label">格子状态一览</div>
+<div style="padding:24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;background:var(--slate-50)">
+<div style="text-align:center"><div class="hex-cell unrevealed" style="margin:0 auto"></div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">未翻开</div></div>
+<div style="text-align:center"><div class="hex-cell revealed num" style="margin:0 auto">3</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">已翻开</div></div>
+<div style="text-align:center"><div class="hex-cell flagged" style="margin:0 auto">🚩</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">标记地雷</div></div>
+<div style="text-align:center"><div class="hex-cell pencil-mine" style="margin:0 auto">❓</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">假设-可能雷</div></div>
+<div style="text-align:center"><div class="hex-cell pencil-safe" style="margin:0 auto">●</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">假设-可能安全</div></div>
+<div style="text-align:center"><div class="hex-cell fuzzy num" style="margin:0 auto">1-3</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">模糊提示</div></div>
+<div style="text-align:center"><div class="hex-cell delayed" style="margin:0 auto">⏳2</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">延迟揭示</div></div>
+<div style="text-align:center"><div class="hex-cell mine" style="margin:0 auto">💣</div><div style="font-size:12px;color:var(--slate-500);margin-top:4px">踩雷</div></div>
+</div>
+</div>
+</div>
+
+<!-- Direction B: Level Select -->
+<div class="direction" id="dir-b">
+<h2 class="direction-title">B. 关卡选择 — 渐进解锁</h2>
+<p class="direction-desc">10 关线性递进，每关展示拓扑轮廓和完成状态。进度条展示整体进度。</p>
+<div class="mockup-frame">
+<div class="mockup-label">关卡选择界面</div>
+<div class="level-select-b">
+<h2>高挑战性扫雷</h2>
+<p class="subtitle">在不断变化的规则中，找到唯一的安全路径</p>
+<div class="level-grid">
+<div class="level-card completed"><span class="star">⭐</span><div class="level-num num">1</div><div class="topo-icon">⬡</div><div class="level-name">蜂巢初探</div><div class="best-time num">0:47</div></div>
+<div class="level-card completed"><span class="star">⭐</span><div class="level-num num">2</div><div class="topo-icon">⬡</div><div class="level-name">六边迷阵</div><div class="best-time num">1:32</div></div>
+<div class="level-card completed"><span class="star">⭐</span><div class="level-num num">3</div><div class="topo-icon">⬡</div><div class="level-name">蜂巢进阶</div><div class="best-time num">1:58</div></div>
+<div class="level-card current"><div class="level-num num">4</div><div class="topo-icon">△</div><div class="level-name">三角呼吸</div></div>
+<div class="level-card locked"><div class="level-num num">5</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+<div class="level-card locked"><div class="level-num num">6</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+<div class="level-card locked"><div class="level-num num">7</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+<div class="level-card locked"><div class="level-num num">8</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+<div class="level-card locked"><div class="level-num num">9</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+<div class="level-card locked"><div class="level-num num">10</div><div class="topo-icon">🔒</div><div class="level-name">???</div></div>
+</div>
+<div class="progress-bar"><div class="fill" style="width:30%"></div></div>
+<p style="text-align:center;font-size:13px;color:var(--slate-500);margin-top:8px" class="num">3 / 10 关完成</p>
+</div>
+</div>
+</div>
+
+<!-- Direction C: Death Review -->
+<div class="direction" id="dir-c">
+<h2 class="direction-title">C. 死因回顾 — 渐进式揭示</h2>
+<p class="direction-desc">分层展示：地雷位置 → 正确推理区域 → 推理断裂点 → 完整推理链。</p>
+<div class="mockup-frame">
+<div class="mockup-label">死因回顾 · 第 4 关</div>
+<div class="death-review-c">
+<div class="header"><h2>💣 踩雷了</h2><p>让我们看看哪里出了问题</p></div>
+<div class="review-steps">
+<span class="review-step active">① 地雷位置</span>
+<span class="review-step">② 你的正确推理</span>
+<span class="review-step">③ 推理断裂点</span>
+<span class="review-step">④ 完整推理链</span>
+</div>
+<div class="review-board">
+<div class="hex-row">
+<div class="hex-cell revealed num" style="background:var(--emerald-500);color:#fff">2</div>
+<div class="hex-cell revealed num" style="background:var(--emerald-500);color:#fff">1</div>
+<div class="hex-cell mine">💣</div>
+<div class="hex-cell revealed num">1</div>
+</div>
+<div class="hex-row" style="margin-left:28px">
+<div class="hex-cell revealed num" style="background:var(--emerald-500);color:#fff">3</div>
+<div class="hex-cell mine">💣</div>
+<div class="hex-cell revealed num">2</div>
+<div class="hex-cell mine">💣</div>
+<div class="hex-cell revealed num">1</div>
+</div>
+<div class="hex-row">
+<div class="hex-cell revealed num">1</div>
+<div class="hex-cell revealed num">2</div>
+<div class="hex-cell mine" style="background:var(--red-500);color:#fff;font-size:14px">💥</div>
+<div class="hex-cell revealed num">1</div>
+</div>
+</div>
+<div class="review-legend">
+<div class="legend-item"><div class="legend-dot" style="background:var(--emerald-500)"></div>推理正确</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--red-500)"></div>踩雷位置</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--red-100);border:1px solid var(--red-300)"></div>地雷</div>
+</div>
+<div class="review-actions">
+<button class="action-btn primary" style="border:none;padding:10px 24px;border-radius:12px;font-family:'Noto Sans SC';font-size:14px;font-weight:500;cursor:pointer;background:var(--teal-600);color:#fff">🔄 重试本关</button>
+<button class="action-btn secondary" style="border:none;padding:10px 24px;border-radius:12px;font-family:'Noto Sans SC';font-size:14px;font-weight:500;cursor:pointer;background:var(--slate-200);color:var(--slate-800)">📋 返回关卡</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Direction D: Tutorial -->
+<div class="direction" id="dir-d">
+<h2 class="direction-title">D. 教学引导 — 先体验后命名</h2>
+<p class="direction-desc">交互式引导覆盖层，高亮目标格子，手指动画引导。不用文字弹窗。</p>
+<div class="mockup-frame">
+<div class="mockup-label">第 1 关 · 首次教学引导</div>
+<div class="tutorial-d" style="min-height:400px">
+<div class="board-a" style="filter:brightness(0.7)">
+<div class="hex-grid">
+<div class="hex-row"><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed"></div></div>
+<div class="hex-row" style="margin-left:28px"><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed" style="background:var(--teal-300);box-shadow:0 0 16px var(--teal-400)"></div><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed"></div></div>
+<div class="hex-row"><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed"></div><div class="hex-cell unrevealed"></div></div>
+</div>
+</div>
+<div class="tutorial-overlay">
+<div class="tutorial-card">
+<div class="emoji">⬡</div>
+<h3>六边形世界</h3>
+<p>在这里，每个格子有 <strong>6 个邻居</strong>，不是 8 个。<br>试试点击高亮的格子吧！</p>
+<div class="hint-arrow">👆</div>
+<div class="skip-btn" style="margin-top:12px">跳过引导</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Direction E: Rule Cards -->
+<div class="direction" id="dir-e">
+<h2 class="direction-title">E. 规则卡片 — 随时查阅</h2>
+<p class="direction-desc">每种拓扑和信息机制有独立的规则卡片，可在游戏中随时查看。</p>
+<div class="mockup-frame">
+<div class="mockup-label">规则卡片集</div>
+<div class="rule-card-e">
+<div class="rule-card">
+<div class="rule-header"><div class="rule-icon" style="background:var(--teal-100)">⬡</div><div class="rule-title">六边形拓扑</div></div>
+<div class="rule-desc">每个格子有 6 个邻居。数字表示周围 6 个格子中的地雷数量。</div>
+<div class="rule-example">
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+<div class="mini-cell" style="background:var(--teal-50);color:var(--teal-700)">2</div>
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+</div>
+</div>
+<div class="rule-card">
+<div class="rule-header"><div class="rule-icon" style="background:var(--amber-100)">〰️</div><div class="rule-title">模糊提示</div></div>
+<div class="rule-desc">数字显示为范围值（如 1-3），表示周围地雷数在此范围内。需要结合多个格子的信息推理。</div>
+<div class="rule-example">
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+<div class="mini-cell" style="background:var(--teal-50);color:var(--amber-500);font-size:11px">1-3</div>
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+</div>
+</div>
+<div class="rule-card">
+<div class="rule-header"><div class="rule-icon" style="background:var(--violet-100)">⏳</div><div class="rule-title">延迟揭示</div></div>
+<div class="rule-desc">翻开格子后，数字不会立刻显示。需要等待指定步数后才能看到。沙漏图标表示等待中。</div>
+<div class="rule-example">
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+<div class="mini-cell" style="background:var(--violet-100);color:var(--violet-500);font-size:11px">⏳2</div>
+<div class="mini-cell" style="background:var(--slate-200)"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Direction F: Completion -->
+<div class="direction" id="dir-f">
+<h2 class="direction-title">F. 通关庆祝 — 满足感释放</h2>
+<p class="direction-desc">通关动画 + 成绩反馈 + 下一关预览，维持"再来一关"的冲动。</p>
+<div class="mockup-frame">
+<div class="mockup-label">第 3 关通关</div>
+<div class="completion-f">
+<div class="trophy">🎉</div>
+<h2>漂亮！第 3 关通关</h2>
+<p class="subtitle">你已经掌握了六边形拓扑的推理技巧</p>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value num">1:42</div><div class="stat-label">通关时间</div></div>
+<div class="stat-card"><div class="stat-value num">2</div><div class="stat-label">尝试次数</div></div>
+<div class="stat-card"><div class="stat-value num">⭐</div><div class="stat-label">新纪录！</div></div>
+</div>
+<div class="next-level-preview">
+<div class="next-label">下一关</div>
+<div class="next-topo">△</div>
+<div class="next-name">第 4 关 · 三角呼吸</div>
+<button class="action-btn primary" style="margin-top:12px;border:none;padding:10px 32px;border-radius:12px;font-family:'Noto Sans SC';font-size:15px;font-weight:600;cursor:pointer;background:var(--teal-600);color:#fff;width:100%">开始挑战 →</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Direction G: Mobile -->
+<div class="direction" id="dir-g">
+<h2 class="direction-title">G. 移动端布局 — 触摸优化</h2>
+<p class="direction-desc">底部工具栏，44px 最小触摸区域，翻开预览确认机制。</p>
+<div class="mockup-frame">
+<div class="mockup-label">移动端 · 375px 宽度</div>
+<div style="display:flex;justify-content:center;padding:24px;background:var(--slate-100)">
+<div class="mobile-g">
+<div class="mobile-header">
+<span style="font-size:14px;font-weight:600;color:var(--teal-700)">第 2 关 · 六边形</span>
+<span class="num" style="font-size:14px;color:var(--slate-500)">01:15</span>
+<span class="num" style="font-size:14px;color:var(--red-500)">💣×3</span>
+</div>
+<div class="mobile-board">
+<div class="hex-row"><div class="hex-cell-sm revealed num" style="background:var(--teal-50);color:var(--teal-700)">1</div><div class="hex-cell-sm revealed num" style="background:var(--teal-50);color:var(--teal-700)">2</div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div></div>
+<div class="hex-row" style="margin-left:22px"><div class="hex-cell-sm revealed num" style="background:var(--teal-50);color:var(--teal-700)">1</div><div class="hex-cell-sm flagged" style="background:var(--red-100);color:var(--red-500);font-size:12px">🚩</div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div></div>
+<div class="hex-row"><div class="hex-cell-sm unrevealed" style="background:var(--teal-200);box-shadow:0 0 8px var(--teal-300)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div></div>
+<div class="hex-row" style="margin-left:22px"><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div><div class="hex-cell-sm unrevealed" style="background:var(--slate-200)"></div></div>
+</div>
+<div style="padding:8px 16px;text-align:center;font-size:12px;color:var(--teal-600);background:var(--teal-50)">👆 按住预览 · 松开翻开 · 长按标记</div>
+<div class="mobile-toolbar">
+<button class="tool-btn">↩</button>
+<button class="tool-btn active">✏️</button>
+<button class="tool-btn">📖</button>
+<button class="tool-btn">⏸</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Direction H: Comparison -->
+<div class="direction" id="dir-h">
+<h2 class="direction-title">H. 全景对比 — 关键界面一览</h2>
+<p class="direction-desc">所有关键界面的并排对比，验证视觉一致性。</p>
+<div class="compare-row">
+<div class="mockup-frame"><div class="mockup-label">关卡选择</div><div class="level-select-b" style="padding:20px"><div class="level-grid" style="grid-template-columns:repeat(5,1fr);gap:8px;max-width:100%">
+<div class="level-card completed" style="padding:12px"><div class="level-num num" style="font-size:20px">1</div><div class="topo-icon" style="font-size:16px">⬡</div></div>
+<div class="level-card completed" style="padding:12px"><div class="level-num num" style="font-size:20px">2</div><div class="topo-icon" style="font-size:16px">⬡</div></div>
+<div class="level-card current" style="padding:12px"><div class="level-num num" style="font-size:20px">3</div><div class="topo-icon" style="font-size:16px">⬡</div></div>
+<div class="level-card locked" style="padding:12px"><div class="level-num num" style="font-size:20px">4</div><div class="topo-icon" style="font-size:16px">🔒</div></div>
+<div class="level-card locked" style="padding:12px"><div class="level-num num" style="font-size:20px">5</div><div class="topo-icon" style="font-size:16px">🔒</div></div>
+</div></div></div>
+<div class="mockup-frame"><div class="mockup-label">通关反馈</div><div class="completion-f" style="padding:20px"><div class="trophy" style="font-size:40px">🎉</div><h2 style="font-size:18px">第 3 关通关</h2><div class="stats-grid" style="grid-template-columns:repeat(3,1fr);gap:8px;max-width:100%;margin:12px auto"><div class="stat-card" style="padding:8px"><div class="stat-value num" style="font-size:20px">1:42</div><div class="stat-label" style="font-size:10px">时间</div></div><div class="stat-card" style="padding:8px"><div class="stat-value num" style="font-size:20px">2</div><div class="stat-label" style="font-size:10px">尝试</div></div><div class="stat-card" style="padding:8px"><div class="stat-value num" style="font-size:20px">⭐</div><div class="stat-label" style="font-size:10px">新纪录</div></div></div></div></div>
+</div>
+<div class="compare-row">
+<div class="mockup-frame"><div class="mockup-label">死因回顾</div><div class="death-review-c" style="padding:20px"><div class="header" style="margin-bottom:12px"><h2 style="font-size:16px">💣 踩雷了</h2></div><div class="review-steps" style="margin-bottom:12px"><span class="review-step active" style="padding:4px 10px;font-size:11px">① 地雷</span><span class="review-step" style="padding:4px 10px;font-size:11px">② 正确</span><span class="review-step" style="padding:4px 10px;font-size:11px">③ 断裂</span><span class="review-step" style="padding:4px 10px;font-size:11px">④ 推理链</span></div></div></div>
+<div class="mockup-frame"><div class="mockup-label">规则卡片</div><div style="padding:20px;background:var(--slate-50)"><div class="rule-card" style="width:100%"><div class="rule-header"><div class="rule-icon" style="background:var(--teal-100);width:32px;height:32px;font-size:16px">⬡</div><div class="rule-title" style="font-size:14px">六边形拓扑</div></div><div class="rule-desc" style="font-size:13px">每个格子有 6 个邻居。</div></div></div></div>
+</div>
+</div>
+
+</div>
+<script>
+function show(id){
+document.querySelectorAll('.direction').forEach(d=>d.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById('dir-'+id).classList.add('active');
+event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

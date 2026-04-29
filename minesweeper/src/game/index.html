@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>高挑战性扫雷</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="game-header">
+      <h1>💣 高挑战性扫雷</h1>
+      <div id="hud">
+        <span id="hud-mines">🚩 0</span>
+        <span id="hud-timer">⏱ 0:00</span>
+        <span id="hud-status"></span>
+      </div>
+      <div id="controls" class="hidden">
+        <button id="btn-undo" title="撤销标记">↩ 撤销</button>
+        <button id="btn-restart" title="重新开始">🔄 重试</button>
+        <button id="btn-back" title="返回关卡选择">📋 返回</button>
+      </div>
+    </header>
+    <main id="game-main">
+      <!-- Level Select Screen -->
+      <div id="level-select" class="screen active">
+        <h2 id="level-select-heading">选择拓扑类型</h2>
+        <div id="level-grid"></div>
+      </div>
+      <!-- Game Play Screen -->
+      <div id="game-play" class="screen">
+        <canvas id="game-canvas" width="900" height="700"></canvas>
+        <div id="game-overlay" class="hidden">
+          <div id="overlay-content"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

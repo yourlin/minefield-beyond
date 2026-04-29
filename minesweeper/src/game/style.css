@@ -1,0 +1,84 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a1a;
+  color: #e0e0e0;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+header#game-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 8px 20px; background: #12122a;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+header h1 { font-size: 16px; font-weight: 600; color: #e94560; }
+
+#hud { display: flex; gap: 16px; margin-left: auto; font-size: 14px; font-family: monospace; }
+#hud span { padding: 4px 10px; background: #1a1a3a; border-radius: 4px; }
+#hud-status { color: #ffd700; }
+
+#controls { display: flex; gap: 6px; }
+#controls.hidden { display: none; }
+#controls button {
+  padding: 6px 12px; border: none; border-radius: 6px;
+  background: #1a1a3a; color: #e0e0e0; font-size: 13px; cursor: pointer;
+  transition: background 0.15s;
+}
+#controls button:hover { background: #e94560; }
+
+main#game-main { flex: 1; position: relative; overflow: hidden; }
+
+.screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
+.screen.active { display: flex; }
+
+/* Level Select */
+#level-select h2 { font-size: 22px; margin-bottom: 24px; color: #e94560; }
+#level-grid {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center;
+  max-width: 600px;
+}
+.level-card {
+  width: 88px; height: 88px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.level-card.locked { background: #1a1a2a; color: #444; cursor: not-allowed; opacity: 0.5; }
+.level-card.available { background: #1a2a4a; border-color: #3a7aca; }
+.level-card.available:hover { border-color: #e94560; transform: scale(1.05); }
+.level-card.completed { background: #1a3a2a; border-color: #2ecc71; }
+.level-card .level-num { font-size: 24px; font-weight: 700; }
+.level-card .level-info { font-size: 10px; color: #888; margin-top: 4px; }
+.category-card { width: 120px; height: 120px; }
+.category-card .level-num { font-size: 36px; }
+.category-card .level-info { font-size: 13px; }
+
+/* Game Play */
+#game-play { align-items: center; justify-content: center; }
+#game-canvas { cursor: crosshair; border-radius: 8px; }
+
+#game-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5); z-index: 10;
+}
+#game-overlay.hidden { display: none; }
+#overlay-content {
+  background: #1a1a3a; padding: 32px 48px; border-radius: 12px;
+  text-align: center; max-width: 400px;
+}
+#overlay-content h2 { font-size: 24px; margin-bottom: 12px; }
+#overlay-content p { font-size: 14px; color: #aaa; margin-bottom: 16px; }
+#overlay-content button {
+  padding: 10px 24px; border: none; border-radius: 6px;
+  background: #e94560; color: white; font-size: 14px; cursor: pointer;
+  margin: 4px;
+}
+#overlay-content button:hover { background: #ff6b81; }
+#overlay-content button.secondary { background: #2a2a4a; }

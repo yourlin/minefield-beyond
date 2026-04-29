@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MSWP 关卡阅读器</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>MSWP 关卡阅读器</h1>
+      <div id="file-loader">
+        <label for="file-input" class="file-label">选择 .mswp 文件</label>
+        <input type="file" id="file-input" accept=".mswp" />
+        <span id="file-name"></span>
+      </div>
+    </header>
+    <main>
+      <div id="canvas-container">
+        <canvas id="board-canvas" width="800" height="600"></canvas>
+      </div>
+      <aside id="info-panel">
+        <h2>关卡信息</h2>
+        <div id="level-info">
+          <p class="placeholder">请加载 .mswp 文件</p>
+        </div>
+        <h2>模拟控件</h2>
+        <div id="sim-controls">
+          <button id="btn-reveal-all" disabled>显示全部</button>
+          <button id="btn-reset" disabled>重置</button>
+          <label>
+            <input type="checkbox" id="chk-show-mines" />
+            显示地雷
+          </label>
+        </div>
+        <div id="cell-info">
+          <p class="placeholder">点击格子查看详情</p>
+        </div>
+      </aside>
+    </main>
+    <div id="error-bar" class="hidden"></div>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
