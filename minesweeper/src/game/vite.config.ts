@@ -3,6 +3,7 @@ import path from 'path';
 
 export default defineConfig({
   root: path.resolve(__dirname),
+  base: '/minefield-beyond/',
   publicDir: path.resolve(__dirname, 'public'),
   resolve: {
     alias: {
